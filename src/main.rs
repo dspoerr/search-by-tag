@@ -70,21 +70,21 @@ fn main() -> tantivy::Result<()> {
 
     let query_parser = QueryParser::for_index(&index, vec![title, body]);
 
-    let mut newSearch = true;
-
     let exitTerm = "exit";
-    while newSearch != false
+
+    while true
     {
+        println!("Enter query: ");
         let mut line = String::new();
         std::io::stdin().read_line(&mut line).unwrap();
 
-        if line.as_str() == exitTerm
+        /* trim() needed to remove trailing line from user input*/
+        if line.trim().eq(exitTerm)
         {
-            newSearch = false;
-            continue;
+            break;
         }
 
-        let mut query = query_parser.parse_query(&line.as_str())?;
+        let mut query = query_parser.parse_query(&line.trim())?;
 
         let mut top_docs = searcher.search(&query, &TopDocs::with_limit(10))?;
     
